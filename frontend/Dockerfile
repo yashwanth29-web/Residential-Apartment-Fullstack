@@ -6,5 +6,6 @@ COPY . .
 RUN npm run build --prod
 
 FROM nginx:alpine
-COPY --from=build /app/dist/* /usr/share/nginx/html
+# Copy the contents of the specific Angular output folder into nginx html root
+COPY --from=build /app/dist/admin-app/ /usr/share/nginx/html
 EXPOSE 80

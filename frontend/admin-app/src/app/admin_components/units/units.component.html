@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+
+
+
+<div class="page">
+  <h2 class="title">Manage Units</h2>
+
+  <!-- Create Unit -->
+  <div class="form-card">
+    <h3>Add New Unit</h3>
+
+    <div class="form-grid">
+      <input placeholder="Flat Number" [(ngModel)]="flat_number">
+<input type="number" placeholder="Rent" [(ngModel)]="rent">
+<input type="number" placeholder="Tower ID" [(ngModel)]="tower_id">
+<input placeholder="Image filename" [(ngModel)]="image">
+ </div>
+
+    <button class="primary-btn" (click)="createUnit()">Add Unit</button>
+  </div>
+<hr>
+
+<!-- Units List -->
+ <div class="units-grid">
+  <div *ngFor="let u of units" class="unit-card">
+    
+    <!-- Image -->
+    <div class="image-wrapper">
+      <img [src]="api.getImageUrl(u.image)" alt="Flat Image" class="unit-image" />
+      <span class="price-badge">₹{{ u.rent }}</span>
+    </div>
+
+    <!-- Content -->
+    <div class="unit-content">
+      <h3>Flat {{ u.flat_number }}</h3>
+
+      <div class="meta">
+        <span>Status: <b>{{ u.status }}</b></span>
+        <span>Tower: <b>{{ u.tower_id }}</b></span>
+      </div>
+
+      <button class="delete-btn" (click)="deleteUnit(u.id)">
+        🗑 Remove Unit
+      </button>
+    </div>
+
+  </div>
+</div>
+
+</div>

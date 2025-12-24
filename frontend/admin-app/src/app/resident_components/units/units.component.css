@@ -1,0 +1,187 @@
+/* Page */
+.page-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  padding: 40px;
+  margin-top: 60px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeDown 1s ease;
+}
+
+.header h2 {
+  color: #facc15;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+/* Grid */
+.units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+/* Card */
+.unit-card {
+  background: linear-gradient(145deg, #111827, #020617);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  transition: all 0.5s ease;
+  position: relative;
+  animation: floatUp 0.9s ease forwards;
+}
+
+.unit-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #d4af37, #ffffff22);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.unit-card:hover {
+  transform: translateY(-12px) scale(1.03);
+}
+
+/* Image */
+.image-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.unit-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.unit-card:hover .unit-image {
+  transform: scale(1.18);
+}
+
+/* Rent Badge */
+.rent-badge {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  background: linear-gradient(135deg, #facc15, #d4af37);
+  color: #020617;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* Card Body */
+.card-body {
+  padding: 20px;
+  color: #e5e7eb;
+}
+
+/* Header inside card */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-header h3 {
+  font-size: 20px;
+  color: #f9fafb;
+}
+
+/* Status */
+.status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.available {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: #022c22;
+}
+
+.occupied {
+  background: linear-gradient(135deg, #ef4444, #fca5a5);
+  color: #450a0a;
+}
+
+/* Button */
+.book-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, #facc15, #d4af37);
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #020617;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.book-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(250,204,21,0.5);
+}
+
+.book-btn:disabled {
+  background: #374151;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  color: #9ca3af;
+  margin-top: 60px;
+  font-size: 16px;
+}
+
+/* Animations */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

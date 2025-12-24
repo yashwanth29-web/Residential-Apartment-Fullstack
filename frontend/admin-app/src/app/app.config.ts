@@ -1,0 +1,15 @@
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { routes } from './app.routes';
+import { provideToastr } from 'ngx-toastr';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHttpClient(),
+    provideRouter(routes),
+    importProvidersFrom(FormsModule),
+    provideToastr(),
+  ],
+};

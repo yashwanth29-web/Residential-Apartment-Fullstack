@@ -1,0 +1,49 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <!-- Header -->
+  <div class="header">
+    <h2>Discover Your Dream Flat</h2>
+    <p class="subtitle">Premium living spaces curated for you</p>
+  </div>
+
+  
+  <div class="units-grid" *ngIf="units.length > 0">
+
+    <div *ngFor="let u of units" class="unit-card">
+
+      <!-- Image -->
+      <div class="image-wrap">
+        <img [src]="api.getImageUrl(u.image)" alt="Flat Image" class="unit-image" />
+        <span class="rent-badge">₹{{ u.rent }}/mo</span>
+      </div>
+
+      <!-- Card Content -->
+      <div class="card-body">
+        <div class="card-header">
+          <h3>Flat {{ u.flat_number }}</h3>
+          <span
+            class="status"
+            [class.available]="u.status === 'available'"
+            [class.occupied]="u.status !== 'available'"
+          >
+            {{ u.status }}
+          </span>
+        </div>
+
+        <button
+          class="book-btn"
+          (click)="book(u.id)"
+          [disabled]="u.status !== 'available'"
+        >
+          {{ u.status === 'available' ? 'Book This Flat' : 'Not Available' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="units.length === 0" class="empty-state">
+    Loading premium flats...
+  </div>
+</div>

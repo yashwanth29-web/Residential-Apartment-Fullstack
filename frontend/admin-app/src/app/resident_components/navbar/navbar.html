@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <div class="logo-container">
+    <div class="logo-monogram">
+      <a routerLink="/home" routerLinkActive="active" aria-label="Home">
+        <img src="https://previews.123rf.com/images/glopphy/glopphy2108/glopphy210800025/173092575-modern-luxury-golden-buildings-real-estate-logo-vector-icon-image-design.jpg" alt="Resident Portal Logo">
+      </a>
+    </div>
+    <h2 class="logo">Resident Portal</h2>
+  </div>
+
+  <ul class="nav-links">
+    <li (click)="navigate('/home')" routerLinkActive="active">Home</li>
+    <li (click)="navigate('/units')" routerLinkActive="active">Units</li>
+    <li (click)="navigate('/amenities')" routerLinkActive="active">Amenities</li>
+    <li (click)="navigate('/bookings')" routerLinkActive="active">Bookings</li>
+    <li class="logout" (click)="logout()">Logout</li>
+  </ul>
+</nav>

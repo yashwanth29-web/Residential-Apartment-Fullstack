@@ -7,8 +7,13 @@
   background: linear-gradient(135deg, #2c003e, #4a0072);
   position: relative;
   overflow: hidden;
+  margin-top: 10px;
 }
-
+.empty-state{
+  color: aliceblue;
+  text-align: center;
+  font-size: medium;
+}
 .page-wrapper::before {
   content: '';
   position: absolute;

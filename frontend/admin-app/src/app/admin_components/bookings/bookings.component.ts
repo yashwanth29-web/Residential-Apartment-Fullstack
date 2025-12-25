@@ -1,12 +1,12 @@
-import { Navbar } from '../navbar/navbar';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
+import { Navbar } from '../navbar/navbar';
 
 @Component({
   standalone: true,
   selector: 'app-bookings',
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule , Navbar],
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.css']
 })

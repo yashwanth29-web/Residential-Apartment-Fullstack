@@ -17,12 +17,15 @@ export class UnitsComponent implements OnInit {
   rent = 0;
   tower_id = 0;
   image = '';
+  showPopup = false;
+selectedUnitId!: number;
+
+name = '';
+email = '';
+amount = 0;
 
   constructor(public api: ApiService) {}
-logout() {
-  localStorage.removeItem('token');
-  location.href = '/';
-}
+
 
   ngOnInit() {
     this.loadUnits();
@@ -36,7 +39,37 @@ logout() {
 }
 
 
-  book(unitId: number) {
+openPopup(unitamount: number) {
+  this.amount = unitamount;
+  this.showPopup = true;
+  
+}
+
+closePopup() {
+  this.name = '';
+  this.email = '';
+  this.amount = 0;
+  this.showPopup = false;
+  
+}
+
+pay() {
+  // call booking API after payment
+  
+    this.name = '';
+  this.email = '';
+  this.amount = 0;
+    this.showPopup = false;
+    alert('Payment Successful! Booking Confirmed.');
+    this.loadUnits();
+  
+}
+
+
+  book(unitId: number , unitamount: number) {
+    this.amount = unitamount;
+  this.showPopup = true;
+  
     this.api.bookUnit(unitId).subscribe(() => {
       // refresh list after booking
       this.loadUnits();
@@ -51,3 +84,4 @@ logout() {
   
   
 }
+ 

@@ -1,10 +1,10 @@
 <app-navbar></app-navbar>
-
 <div class="container">
   <!-- Add Amenity Section -->
   <section class="add-section">
-    <h2>Add New Amenity</h2>
+    
     <div class="form-card">
+      <h2>Add New Amenity</h2>
       <div class="form-grid">
         <div class="form-group">
           <label>Amenity Name</label>
@@ -50,9 +50,7 @@
           </div>
         </div>
         <div class="card-actions">
-          <button class="btn btn-edit" (click)="edit(a)">
-            <i class="fas fa-edit"></i> Edit
-          </button>
+          
           <button class="btn btn-delete" (click)="delete(a.id)">
             <i class="fas fa-trash"></i> Delete
           </button>

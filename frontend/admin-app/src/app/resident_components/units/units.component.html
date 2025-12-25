@@ -33,7 +33,8 @@
 
         <button
           class="book-btn"
-          (click)="book(u.id)"
+          (click)="book(u.id, u.rent)"
+          
           [disabled]="u.status !== 'available'"
         >
           {{ u.status === 'available' ? 'Book This Flat' : 'Not Available' }}
@@ -46,4 +47,20 @@
   <div *ngIf="units.length === 0" class="empty-state">
     Loading premium flats...
   </div>
+  <!-- Booking Popup -->
+<div class="popup-overlay" *ngIf="showPopup"> >
+  <div class="popup-card" >
+    <h3>Confirm Booking</h3>
+
+    <input type="text" placeholder="Your Name" [(ngModel)]="name" />
+    <input type="email" placeholder="Email ID" [(ngModel)]="email" />
+    <input type="number" placeholder="Amount" [(ngModel)]="amount" />
+
+    <div class="popup-actions">
+      <button class="pay-btn" (click)="pay()">Pay</button>
+    </div>
+  </div>
 </div>
+
+</div>
+

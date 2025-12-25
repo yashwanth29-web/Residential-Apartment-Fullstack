@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Navbar } from '../navbar/navbar';
 import { ApiService } from '../../services/api.service';
-
+import { Navbar } from '../navbar/navbar';
 @Component({
    standalone: true,
   selector: 'app-amenities',
@@ -37,6 +36,7 @@ export class Amenities implements OnInit {
     this.api.addAmenity(this.form).subscribe(() => {
       alert('Amenity added');
       this.form = { name: '', description: '', image: '', tower_id: 1 };
+      
       this.loadAmenities();
     });
   }

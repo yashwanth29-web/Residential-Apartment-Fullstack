@@ -3,11 +3,12 @@ import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Navbar } from '../navbar/navbar';
+
 @Component({
  
   standalone: true,
   selector: 'app-leases',
-  imports: [Navbar, CommonModule, FormsModule],
+  imports: [ CommonModule, FormsModule, Navbar],
   templateUrl: './leases.html',
   styleUrl: './leases.css',
 })
@@ -16,7 +17,7 @@ export class Leases implements OnInit {
   leases: any[] = [];
 
   form = {
-    user_id: 0,
+    Booking_id: 0,
     unit_id: 0,
     user_name: ''
   };
@@ -36,7 +37,7 @@ export class Leases implements OnInit {
   createLease() {
     this.api.createLease(this.form).subscribe(() => {
       alert('Lease created');
-      this.form = { user_id: 0, unit_id: 0, user_name: '' };
+      this.form = { Booking_id: 0, unit_id: 0, user_name: '' };
       this.loadLeases();
     });
   }

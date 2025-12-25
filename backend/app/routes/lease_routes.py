@@ -5,6 +5,7 @@ from app.models.lease import Lease
 from app.models.unit import Unit
 from app.models.user import User
 from datetime import date
+# from booking_routes import Booking
 
 lease_bp = Blueprint("lease", __name__, url_prefix="/api/admin/leases")
 
@@ -19,7 +20,8 @@ def create_lease():
     data = request.json
 
     lease = Lease(
-        user_id=data["user_id"],
+        user_id=data["Booking_id"],
+        
         unit_id=data["unit_id"],
         user_name=data.get("user_name"),
         start_date=date.today()

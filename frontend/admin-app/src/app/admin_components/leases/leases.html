@@ -19,7 +19,7 @@
         <h2>Assign Tenant to Flat</h2>
 
         <div class="input-row">
-          <input type="number" placeholder="User ID" [(ngModel)]="form.user_id" />
+          <input type="number" placeholder="Booking ID" [(ngModel)]="form.Booking_id" />
           <input type="number" placeholder="Unit ID" [(ngModel)]="form.unit_id" />
           <input type="text" placeholder="Tenant Name" [(ngModel)]="form.user_name" />
         </div>
@@ -42,7 +42,7 @@
       <h3 class="tenant-name">{{ l.user_name }}</h3>
 
       <div class="lease-info">
-        <p><span>User ID</span><em>{{ l.user_id }}</em></p>
+        <p><span>Booking ID</span><em>{{ l.user_id }}</em></p>
         <p><span>Unit ID</span><em>{{ l.unit_id }}</em></p>
         <p><span>Start Date</span><em>{{ l.start_date | date }}</em></p>
       </div>

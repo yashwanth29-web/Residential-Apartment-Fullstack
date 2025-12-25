@@ -56,6 +56,10 @@ logout() {
     alert('Unit added');
     this.loadUnits();
   });
+  this.flat_number = '';
+  this.rent = 0;
+  this.tower_id = 0;
+  this.image = '';
 }
 
 }

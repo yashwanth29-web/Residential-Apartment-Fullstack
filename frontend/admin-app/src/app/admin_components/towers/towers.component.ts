@@ -3,6 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../navbar/navbar';
+
 @Component({
   standalone: true,
   selector: 'app-towers',

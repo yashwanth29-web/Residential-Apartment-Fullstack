@@ -1,4 +1,10 @@
+import os
+
 class Config:
-    SQLALCHEMY_DATABASE_URI = "postgresql://neondb_owner:npg_g0N7mRDuZfKB@ep-long-tree-adsh5yl5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL',
+        f'sqlite:///{os.path.join(basedir, "..", "instance", "apartment.db")}'
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = "super-secret-key"
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'super-secret-key')

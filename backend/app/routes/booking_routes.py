@@ -21,6 +21,7 @@ def admin_get_bookings():
     result = []
     for b in bookings:
         user = User.query.get(b.user_id)
+        unit = Unit.query.get(b.unit_id)
         lease = Lease.query.filter_by(user_id=b.user_id, unit_id=b.unit_id).order_by(Lease.start_date.desc()).first()
         approved_date = lease.start_date.isoformat() if lease else None
         result.append({
@@ -28,6 +29,7 @@ def admin_get_bookings():
             "user_id": b.user_id,
             "user_name": b.user_name if getattr(b, 'user_name', None) else (user.name if user else None),
             "unit_id": b.unit_id,
+            "flat_number": unit.flat_number if unit else None,
             "status": b.status,
             "approved_date": approved_date
         })
@@ -42,23 +44,47 @@ def admin_update_booking(booking_id):
         return jsonify({"message": "Admin access required"}), 403
 
     booking = Booking.query.get(booking_id)
+    if not booking:
+        return jsonify({"message": "Booking not found"}), 404
+        
     previous_status = booking.status
     status = request.json["status"]  # approved / rejected
-    booking.status = status
+    
+    unit = Unit.query.get(booking.unit_id)
 
-    # Only create a lease if this is the first time approving
+    # Handle APPROVED status - create lease and mark unit occupied
     if status == "approved" and previous_status != "approved":
         user = User.query.get(booking.user_id)
         user_name = booking.user_name if getattr(booking, 'user_name', None) else (user.name if user else None)
+        
+        # Create lease automatically
         lease = Lease(
             user_id=booking.user_id,
             user_name=user_name,
             unit_id=booking.unit_id
         )
-        unit = Unit.query.get(booking.unit_id)
-        unit.status = "occupied"
         db.session.add(lease)
+        
+        # Mark unit as occupied
+        if unit:
+            unit.status = "occupied"
+        
+        booking.status = status
+        db.session.commit()
+        return jsonify({"message": "Booking approved and lease created"})
 
+    # Handle REJECTED status - delete booking and make unit available
+    if status == "rejected":
+        # Make unit available again
+        if unit:
+            unit.status = "available"
+        
+        # Delete the booking
+        db.session.delete(booking)
+        db.session.commit()
+        return jsonify({"message": "Booking rejected and removed"})
+
+    booking.status = status
     db.session.commit()
     return jsonify({"message": "Booking processed"})
 # ---------------- USER BOOKINGS ----------------

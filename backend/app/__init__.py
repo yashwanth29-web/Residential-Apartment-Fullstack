@@ -27,7 +27,7 @@ def create_app():
 
     db.init_app(app)
     jwt.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 
     app.register_blueprint(auth_bp)

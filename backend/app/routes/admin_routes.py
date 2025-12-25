@@ -10,44 +10,8 @@ from app.models.tower import Tower
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 
 # Create tower endpoint moved to `app.routes.towers` (tower_bp)
+# Booking endpoints moved to `app.routes.booking_routes` (admin_booking_bp)
 
-
-# ---------------------------
-# GET ALL BOOKINGS (ADMIN)
-# ---------------------------
-
-# ---------------------------
-# APPROVE / REJECT BOOKING
-# ---------------------------
-@admin_bp.route("/bookings/<int:id>", methods=["PUT"])
-@jwt_required()
-def update_booking_status(id):
-    user_id = get_jwt_identity()
-    user = User.query.get(int(user_id))
-
-    if not user or user.role != "admin":
-        return jsonify({"message": "Admin access required"}), 403
-
-    booking = Booking.query.get(id)
-    if not booking:
-        return jsonify({"message": "Booking not found"}), 404
-
-    status = request.json.get("status")
-    if status not in ["approved", "rejected"]:
-        return jsonify({"message": "Invalid status"}), 400
-
-    booking.status = status
-
-    # 🔑 IMPORTANT BUSINESS LOGIC
-    unit = Unit.query.get(booking.unit_id)
-    if status == "approved":
-        unit.status = "occupied"
-    else:
-        unit.status = "available"
-
-    db.session.commit()
-
-    return jsonify({"message": "Booking updated successfully"})
 
 @admin_bp.route("/dashboard", methods=["GET"])
 @jwt_required()

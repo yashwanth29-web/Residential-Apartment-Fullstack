@@ -8,7 +8,6 @@ auth_bp = Blueprint('auth', __name__, url_prefix="/api/auth")
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.json
-    print("data,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",data)
 
     user_exists = User.query.filter_by(email=data['email']).first()
     if user_exists:

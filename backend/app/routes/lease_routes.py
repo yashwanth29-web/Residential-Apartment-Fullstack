@@ -4,8 +4,8 @@ from app.extensions import db
 from app.models.lease import Lease
 from app.models.unit import Unit
 from app.models.user import User
+from app.models.tower import Tower
 from datetime import date
-# from booking_routes import Booking
 
 lease_bp = Blueprint("lease", __name__, url_prefix="/api/admin/leases")
 
@@ -18,17 +18,32 @@ def create_lease():
         return jsonify({"message": "Admin only"}), 403
 
     data = request.json
+    
+    # Support flat_number instead of unit_id
+    unit_id = data.get("unit_id")
+    flat_number = data.get("flat_number")
+    
+    if flat_number and not unit_id:
+        unit = Unit.query.filter_by(flat_number=flat_number).first()
+        if not unit:
+            return jsonify({"message": f"Flat '{flat_number}' not found"}), 404
+        unit_id = unit.id
+    elif unit_id:
+        unit = Unit.query.get(unit_id)
+        if not unit:
+            return jsonify({"message": "Unit not found"}), 404
+    else:
+        return jsonify({"message": "unit_id or flat_number is required"}), 400
 
     lease = Lease(
-        user_id=data["Booking_id"],
-        
-        unit_id=data["unit_id"],
+        user_id=data.get("Booking_id", 0),
+        unit_id=unit_id,
         user_name=data.get("user_name"),
         start_date=date.today()
     )
 
     # mark unit occupied
-    unit = Unit.query.get(data["unit_id"])
+    unit = Unit.query.get(unit_id)
     unit.status = "occupied"
 
     db.session.add(lease)
@@ -46,15 +61,21 @@ def get_leases():
         return jsonify({"message": "Admin only"}), 403
 
     leases = Lease.query.all()
-    return jsonify([
-        {
+    result = []
+    for l in leases:
+        unit = Unit.query.get(l.unit_id)
+        tower = Tower.query.get(unit.tower_id) if unit else None
+        result.append({
             "id": l.id,
             "user_id": l.user_id,
             "user_name": l.user_name,
             "unit_id": l.unit_id,
+            "flat_number": unit.flat_number if unit else None,
+            "tower_name": tower.name if tower else None,
+            "rent": unit.rent if unit else None,
             "start_date": l.start_date.isoformat()
-        } for l in leases
-    ])
+        })
+    return jsonify(result)
 
 
 # ---------------- UPDATE LEASE ----------------

@@ -71,6 +71,21 @@
   text-transform: uppercase;
 }
 
+.status-badge.pending {
+  background: rgba(241, 196, 15, 0.3);
+  color: #f39c12;
+}
+
+.status-badge.approved {
+  background: rgba(46, 204, 113, 0.3);
+  color: #27ae60;
+}
+
+.status-badge.rejected {
+  background: rgba(231, 76, 60, 0.3);
+  color: #e74c3c;
+}
+
 .status-confirmed {
   background: rgba(46, 204, 113, 0.3);
   color: #27ae60;
@@ -84,6 +99,16 @@
 .status-cancelled {
   background: rgba(231, 76, 60, 0.3);
   color: #e74c3c;
+}
+
+.payment-status {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #ddd;
+}
+
+.payment-status.success {
+  color: #27ae60;
 }
 
 .card-body {

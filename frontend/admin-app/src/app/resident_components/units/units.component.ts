@@ -1,87 +1,127 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   standalone: true,
   selector: 'app-units',
-  imports: [CommonModule, NavbarComponent,FormsModule],
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.css']
 })
 export class UnitsComponent implements OnInit {
- units: any[] = [];
-  flat_number = '';
-  rent = 0;
-  tower_id = 0;
-  image = '';
+  units: any[] = [];
+  filteredUnits: any[] = [];
   showPopup = false;
-selectedUnitId!: number;
+  selectedUnit: any = null;
+  
+  // Search filters
+  searchFlat = '';
+  searchTower = '';
+  maxRent: number | null = null;
+  
+  // Payment form fields
+  cardNumber = '';
+  cardExpiry = '';
+  cardCvv = '';
+  isProcessing = false;
 
-name = '';
-email = '';
-amount = 0;
-
-  constructor(public api: ApiService) {}
-
+  constructor(public api: ApiService, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.loadUnits();
   }
 
   loadUnits() {
-  this.api.getResidentUnits().subscribe((res: any) => {
-    console.log('UNITS FROM API:', res);   // 🔴 IMPORTANT
-    this.units = res;
-  });
-}
-
-
-openPopup(unitamount: number) {
-  this.amount = unitamount;
-  this.showPopup = true;
-  
-}
-
-closePopup() {
-  this.name = '';
-  this.email = '';
-  this.amount = 0;
-  this.showPopup = false;
-  
-}
-
-pay() {
-  // call booking API after payment
-  
-    this.name = '';
-  this.email = '';
-  this.amount = 0;
-    this.showPopup = false;
-    alert('Payment Successful! Booking Confirmed.');
-    this.loadUnits();
-  
-}
-
-
-  book(unitId: number , unitamount: number) {
-    this.amount = unitamount;
-  this.showPopup = true;
-  
-    this.api.bookUnit(unitId).subscribe(() => {
-      // refresh list after booking
-      this.loadUnits();
-    }, (err: any) => {
-      console.error('Booking failed', err);
-      // optionally show user feedback
+    this.api.getResidentUnits().subscribe({
+      next: (res: any) => {
+        this.units = res;
+        this.filterUnits();
+      },
+      error: () => {
+        this.toastr.error('Failed to load units', 'Error');
+      }
     });
   }
 
-  
+  filterUnits() {
+    this.filteredUnits = this.units.filter(u => {
+      const matchFlat = !this.searchFlat || u.flat_number?.toLowerCase().includes(this.searchFlat.toLowerCase());
+      const matchTower = !this.searchTower || u.tower_name?.toLowerCase().includes(this.searchTower.toLowerCase());
+      const matchRent = !this.maxRent || u.rent <= this.maxRent;
+      return matchFlat && matchTower && matchRent;
+    });
+  }
 
-  
-  
+  openBookingPopup(unit: any) {
+    this.selectedUnit = unit;
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.selectedUnit = null;
+    this.cardNumber = '';
+    this.cardExpiry = '';
+    this.cardCvv = '';
+    this.showPopup = false;
+    this.isProcessing = false;
+  }
+
+  confirmBooking() {
+    if (!this.validatePayment()) {
+      return;
+    }
+
+    this.isProcessing = true;
+    
+    // First create the booking
+    this.api.bookUnit(this.selectedUnit.id).subscribe({
+      next: () => {
+        // Simulate payment processing
+        setTimeout(() => {
+          this.toastr.success('Payment successful! Your booking request has been submitted.', 'Success');
+          this.closePopup();
+          this.loadUnits();
+        }, 1500);
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        this.toastr.error(err?.error?.message || 'Booking failed', 'Error');
+      }
+    });
+  }
+
+  validatePayment(): boolean {
+    if (!this.cardNumber || this.cardNumber.replace(/\s/g, '').length < 16) {
+      this.toastr.warning('Please enter a valid card number', 'Validation');
+      return false;
+    }
+    if (!this.cardExpiry || !this.cardExpiry.match(/^\d{2}\/\d{2}$/)) {
+      this.toastr.warning('Please enter expiry in MM/YY format', 'Validation');
+      return false;
+    }
+    if (!this.cardCvv || this.cardCvv.length < 3) {
+      this.toastr.warning('Please enter a valid CVV', 'Validation');
+      return false;
+    }
+    return true;
+  }
+
+  formatCardNumber(event: any) {
+    let value = event.target.value.replace(/\s/g, '').replace(/\D/g, '');
+    value = value.substring(0, 16);
+    const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+    this.cardNumber = formatted;
+  }
+
+  formatExpiry(event: any) {
+    let value = event.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    this.cardExpiry = value;
+  }
 }
- 

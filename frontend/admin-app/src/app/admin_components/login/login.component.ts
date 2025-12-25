@@ -3,6 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -12,46 +13,47 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   email = '';
   password = '';
-  
-  // ✅ Added these to fix template errors
-  rememberMe = false;        // For the "Remember Me" checkbox
-  showPassword = false;      // For the password show/hide toggle (used in your HTML)
+  rememberMe = false;
+  showPassword = false;
 
   constructor(
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
-  // ✅ AUTO-SKIP LOGIN IF ADMIN ALREADY LOGGED IN
- ngOnInit(): void {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
 
-  // ✅ Only auto-redirect if current URL is login page
-  if (
-    token &&
-    role === 'admin' &&
-    this.router.url === '/'   // IMPORTANT
-  ) {
-    this.router.navigate(['/admin/dashboard']);
+    if (token && role === 'admin' && this.router.url === '/') {
+      this.router.navigate(['/admin/dashboard']);
+    }
   }
-}
 
-  // ✅ LOGIN METHOD (unchanged)
   login() {
-  this.api.login({ email: this.email, password: this.password })
-    .subscribe((res: any) => {
-      localStorage.setItem('token', res.access_token);
-      localStorage.setItem('role', res.user.role);
+    if (!this.email || !this.password) {
+      this.toastr.warning('Please enter email and password', 'Validation');
+      return;
+    }
 
-      if (res.user.role === 'admin') {
-        this.router.navigate(['/admin/dashboard']);
-      } else {
-        this.router.navigate(['/home']);
+    this.api.login({ email: this.email, password: this.password }).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.access_token);
+        localStorage.setItem('role', res.user.role);
+        this.toastr.success('Login successful', 'Welcome');
+
+        if (res.user.role === 'admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || 'Login failed', 'Error');
       }
     });
-}
+  }
 }

@@ -3,6 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../navbar/navbar';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -15,18 +16,21 @@ export class TowersComponent implements OnInit {
   name = '';
   towers: any[] = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.loadTowers();
   }
 
   loadTowers() {
-    this.api.getTowers().subscribe((res: any) => {
-      this.towers = res || [];
-    }, (err) => {
-      console.error('Failed to load towers', err);
-      this.towers = [];
+    this.api.getTowers().subscribe({
+      next: (res: any) => {
+        this.towers = res || [];
+      },
+      error: () => {
+        this.towers = [];
+        this.toastr.error('Failed to load towers', 'Error');
+      }
     });
   }
 
@@ -43,47 +47,54 @@ export class TowersComponent implements OnInit {
   saveEdit(t: any) {
     const name = (t.editName || '').trim();
     if (!name) {
-      alert('Please enter a name');
+      this.toastr.warning('Please enter a name', 'Validation');
       return;
     }
-    this.api.updateTower(t.id, name).subscribe(() => {
-      t.editing = false;
-      this.loadTowers();
-    }, (err) => {
-      console.error('Update failed', err);
-      alert((err?.error?.message) || 'Update failed');
+    this.api.updateTower(t.id, name).subscribe({
+      next: () => {
+        t.editing = false;
+        this.toastr.success('Tower updated', 'Success');
+        this.loadTowers();
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || 'Update failed', 'Error');
+      }
     });
   }
 
   deleteTower(t: any) {
     if (!confirm(`Delete tower "${t.name}"?`)) return;
-    this.api.deleteTower(t.id).subscribe(() => {
-      this.loadTowers();
-    }, (err) => {
-      console.error('Delete failed', err);
-      alert((err?.error?.message) || 'Delete failed');
+    this.api.deleteTower(t.id).subscribe({
+      next: () => {
+        this.toastr.success('Tower deleted', 'Success');
+        this.loadTowers();
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || 'Delete failed', 'Error');
+      }
     });
   }
 
   createTower() {
     if (!this.name || !this.name.trim()) {
-      alert('Please enter a tower name');
+      this.toastr.warning('Please enter a tower name', 'Validation');
       return;
     }
 
-    this.api.createTower(this.name.trim()).subscribe(() => {
-      alert('Tower created');
-      this.name = '';
-      this.loadTowers();
-    }, (err) => {
-      console.error('Create failed', err);
-      alert('Failed to create tower');
+    this.api.createTower(this.name.trim()).subscribe({
+      next: () => {
+        this.toastr.success('Tower created', 'Success');
+        this.name = '';
+        this.loadTowers();
+      },
+      error: () => {
+        this.toastr.error('Failed to create tower', 'Error');
+      }
     });
   }
 
-logout() {
-  localStorage.removeItem('token');
-  location.href = '/';
+  logout() {
+    localStorage.removeItem('token');
+    location.href = '/';
+  }
 }
-
-}  

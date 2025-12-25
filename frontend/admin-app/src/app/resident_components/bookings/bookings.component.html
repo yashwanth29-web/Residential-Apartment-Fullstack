@@ -3,34 +3,29 @@
 <div class="main-container">
   <h2>My Bookings</h2>
 
-  <div class="bookings-grid">
+  <div class="bookings-grid" *ngIf="bookings.length > 0">
     <div *ngFor="let b of bookings" class="booking-card">
       <div class="card-header">
-        <h3>Unit ID: {{ b.unit_id }}</h3>
-        
+        <h3>Flat {{ b.flat_number || 'N/A' }}</h3>
+        <span class="status-badge" [class.pending]="b.status === 'pending'" 
+              [class.approved]="b.status === 'approved'" 
+              [class.rejected]="b.status === 'rejected'">
+          {{ b.status }}
+        </span>
       </div>
       <div class="card-body">
-        <p><strong>Booking ID:</strong> {{ b.id }}</p>
-      </div>
-      <div class="card-body">
+        <p><strong>Booking ID:</strong> #{{ b.id }}</p>
+        <p><strong>Unit ID:</strong> {{ b.unit_id }}</p>
         <p><strong>Booked by:</strong> {{ b.user_name }}</p>
+        <p><strong>Email:</strong> {{ b.user_mail }}</p>
+        <p class="payment-status" [class.success]="b.status === 'approved'">
+          <strong>Payment:</strong> {{ b.payment_status }}
+        </p>
       </div>
-      <div class="card-body">
-        <p><strong>User Email:</strong> {{ b.user_mail }}</p>
-      </div>
-      <div class="card-body">
-        <p><strong>Booking Status</strong> {{ b.status }}</p>
-      </div>
-      <div class="card-body">
-        <p><strong>Flat Number:</strong> {{ b.flat_number }}</p>
-      </div>
-      <div class="card-body">
-        <p><strong>Payment Status:</strong> {{ b.payment_status }}</p>
-      </div>
-
-      
-    <div class="no-bookings" *ngIf="bookings.length === 0">
-      <p>No bookings found</p>
     </div>
+  </div>
+
+  <div class="no-bookings" *ngIf="bookings.length === 0">
+    <p>No bookings found. Start by booking a flat!</p>
   </div>
 </div>

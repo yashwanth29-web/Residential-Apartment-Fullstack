@@ -22,8 +22,11 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Tower ID</label>
-          <input type="number" [(ngModel)]="form.tower_id" placeholder="e.g. 1" />
+          <label>Tower</label>
+          <select [(ngModel)]="form.tower_name">
+            <option value="">Select Tower</option>
+            <option *ngFor="let t of towers" [value]="t.name">{{ t.name }}</option>
+          </select>
         </div>
       </div>
       <button class="btn btn-primary" (click)="addAmenity()" [disabled]="!form.name">
@@ -41,7 +44,7 @@
       <div class="card" *ngFor="let a of amenities">
         <div class="card-header">
           <h3>{{ a.name }}</h3>
-          <span class="tower-badge">Tower {{ a.tower_id }}</span>
+          <span class="tower-badge">{{ a.tower_name || 'Tower ' + a.tower_id }}</span>
         </div>
         <div class="card-body">
           <p>{{ a.description || 'No description provided' }}</p>
@@ -50,7 +53,9 @@
           </div>
         </div>
         <div class="card-actions">
-          
+          <button class="btn btn-edit" (click)="edit(a)">
+            <i class="fas fa-edit"></i> Edit
+          </button>
           <button class="btn btn-delete" (click)="delete(a.id)">
             <i class="fas fa-trash"></i> Delete
           </button>
@@ -85,8 +90,11 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Tower ID</label>
-          <input type="number" [(ngModel)]="editAmenity.tower_id" />
+          <label>Tower</label>
+          <select [(ngModel)]="editAmenity.tower_name">
+            <option value="">Select Tower</option>
+            <option *ngFor="let t of towers" [value]="t.name">{{ t.name }}</option>
+          </select>
         </div>
       </div>
     </div>

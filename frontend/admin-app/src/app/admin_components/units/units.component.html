@@ -3,24 +3,37 @@
 <div class="page">
   <h2 class="title">Manage Units</h2>
 
-  <!-- Create Unit -->
+  <!-- Create/Edit Unit -->
   <div class="form-card">
-    <h3>Add New Unit</h3>
+    <h3>{{ editMode ? 'Edit Unit' : 'Add New Unit' }}</h3>
 
     <div class="form-grid">
       <input placeholder="Flat Number" [(ngModel)]="flat_number">
-<input type="number" placeholder="Rent" [(ngModel)]="rent">
-<input type="number" placeholder="Tower ID" [(ngModel)]="tower_id">
-<input placeholder="Image filename" [(ngModel)]="image">
- </div>
+      <input type="number" placeholder="Rent" [(ngModel)]="rent">
+      <select [(ngModel)]="tower_name">
+        <option value="">Select Tower</option>
+        <option *ngFor="let t of towers" [value]="t.name">{{ t.name }}</option>
+      </select>
+      <input placeholder="Image filename" [(ngModel)]="image">
+    </div>
 
-    <button class="primary-btn" (click)="createUnit()">Add Unit</button>
+    <div class="form-actions">
+      <button class="primary-btn" (click)="saveUnit()">
+        {{ editMode ? 'Update Unit' : 'Add Unit' }}
+      </button>
+      <button class="cancel-btn" *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <input placeholder="Search by flat number..." [(ngModel)]="searchFlat" (input)="filterUnits()">
   </div>
 <hr>
 
 <!-- Units List -->
  <div class="units-grid">
-  <div *ngFor="let u of units" class="unit-card">
+  <div *ngFor="let u of filteredUnits" class="unit-card" [class.editing]="editingUnitId === u.id">
     
     <!-- Image -->
     <div class="image-wrapper">
@@ -34,12 +47,17 @@
 
       <div class="meta">
         <span>Status: <b>{{ u.status }}</b></span>
-        <span>Tower: <b>{{ u.tower_id }}</b></span>
+        <span>Tower: <b>{{ u.tower_name || 'N/A' }}</b></span>
       </div>
 
-      <button class="delete-btn" (click)="deleteUnit(u.id)">
-        🗑 Remove Unit
-      </button>
+      <div class="action-buttons">
+        <button class="edit-btn" (click)="editUnit(u)">
+          ✏️ Edit
+        </button>
+        <button class="delete-btn" (click)="deleteUnit(u.id)">
+          🗑 Delete
+        </button>
+      </div>
     </div>
 
   </div>

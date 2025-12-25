@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
 
-  private baseUrl = 'http://127.0.0.1:5000';
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -120,6 +120,14 @@ export class ApiService {
   createUnit(data: any): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/api/admin/units`,
+      data,
+      { headers: this.authHeaders() }
+    );
+  }
+
+  updateUnit(id: number, data: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/api/admin/units/${id}`,
       data,
       { headers: this.authHeaders() }
     );

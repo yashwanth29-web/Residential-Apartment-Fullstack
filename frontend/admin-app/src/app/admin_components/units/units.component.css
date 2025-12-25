@@ -219,7 +219,7 @@
 
 /* Delete Button */
 .delete-btn {
-  width: 100%;
+  flex: 1;
   padding: 10px;
   background: transparent;
   border: 1px solid #7f1d1d;
@@ -235,6 +235,103 @@
   color: #fff;
   box-shadow: 0 10px 20px rgba(127,29,29,0.5);
   transform: translateY(-2px);
+}
+
+/* Edit Button */
+.edit-btn {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #1d4ed8;
+  color: #93c5fd;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(29,78,216,0.5);
+  transform: translateY(-2px);
+}
+
+/* Action Buttons Container */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.form-actions .cancel-btn {
+  padding: 10px 18px;
+  background: #6b7280;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-actions .cancel-btn:hover {
+  background: #4b5563;
+}
+
+/* Search Bar */
+.search-bar {
+  margin: 20px 0;
+  padding: 0 30px;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 18px;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.8);
+  color: #e5e7eb;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15);
+}
+
+.search-bar input::placeholder {
+  color: #6b7280;
+}
+
+/* Tower Select */
+.form-grid select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: 0.3s;
+  background: white;
+}
+
+.form-grid select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+/* Editing state */
+.unit-card.editing {
+  border: 2px solid #facc15;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
 }
 
 /* Entrance Animation */

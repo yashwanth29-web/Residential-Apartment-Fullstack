@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   standalone: true,
   selector: 'app-units',
-  imports: [CommonModule, NavbarComponent, FormsModule],
+  imports: [CommonModule, NavbarComponent, FormsModule, LoadingSpinnerComponent],
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.css']
 })
@@ -17,6 +18,7 @@ export class UnitsComponent implements OnInit {
   filteredUnits: any[] = [];
   showPopup = false;
   selectedUnit: any = null;
+  isLoading = true;
   
   // Search filters
   searchFlat = '';
@@ -29,20 +31,31 @@ export class UnitsComponent implements OnInit {
   cardCvv = '';
   isProcessing = false;
 
-  constructor(public api: ApiService, private toastr: ToastrService) {}
+  constructor(
+    public api: ApiService, 
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadUnits();
   }
 
   loadUnits() {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    
     this.api.getResidentUnits().subscribe({
       next: (res: any) => {
         this.units = res;
         this.filterUnits();
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.toastr.error('Failed to load units', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

@@ -31,8 +31,10 @@
   </div>
 <hr>
 
+<app-loading-spinner [isLoading]="isLoading" message="Loading units..."></app-loading-spinner>
+
 <!-- Units List -->
- <div class="units-grid">
+ <div class="units-grid" *ngIf="!isLoading">
   <div *ngFor="let u of filteredUnits" class="unit-card" [class.editing]="editingUnitId === u.id">
     
     <!-- Image -->

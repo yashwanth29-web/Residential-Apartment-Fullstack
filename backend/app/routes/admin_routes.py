@@ -5,6 +5,8 @@ from app.models.user import User
 from app.models.booking import Booking
 from app.models.unit import Unit
 from app.models.tower import Tower
+from app.models.lease import Lease
+from app.models.amenity import Amenity
 
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
@@ -26,11 +28,15 @@ def admin_dashboard():
     total_units = Unit.query.count()
     occupied_units = Unit.query.filter_by(status="occupied").count()
     pending_bookings = Booking.query.filter_by(status="pending").count()
+    active_leases = Lease.query.count()
+    total_amenities = Amenity.query.count()
 
     return jsonify({
         "totalTowers": total_towers,
         "totalUnits": total_units,
         "occupiedUnits": occupied_units,
-        "pendingBookings": pending_bookings
+        "pendingBookings": pending_bookings,
+        "activeLeases": active_leases,
+        "totalAmenities": total_amenities
     })
 

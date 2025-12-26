@@ -9,10 +9,10 @@
   </div>
 
   <ul class="nav-links">
-    <li (click)="navigate('/home')" routerLinkActive="active">Home</li>
-    <li (click)="navigate('/units')" routerLinkActive="active">Units</li>
-    <li (click)="navigate('/amenities')" routerLinkActive="active">Amenities</li>
-    <li (click)="navigate('/bookings')" routerLinkActive="active">Bookings</li>
+    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+    <li><a routerLink="/units" routerLinkActive="active">Units</a></li>
+    <li><a routerLink="/amenities" routerLinkActive="active">Amenities</a></li>
+    <li><a routerLink="/bookings" routerLinkActive="active">Bookings</a></li>
     <li class="logout" (click)="logout()">Logout</li>
   </ul>
 </nav>

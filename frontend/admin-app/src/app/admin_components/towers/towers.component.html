@@ -20,11 +20,13 @@
   <div class="list-frame">
     <h2 class="subtitle">All Towers</h2>
 
-    <div class="empty-state" *ngIf="towers.length === 0">
+    <app-loading-spinner [isLoading]="isLoading" message="Loading towers..."></app-loading-spinner>
+
+    <div class="empty-state" *ngIf="!isLoading && towers.length === 0">
       <p>No towers created yet.</p>
     </div>
 
-    <ul class="towers-list">
+    <ul class="towers-list" *ngIf="!isLoading">
       <li *ngFor="let t of towers">
         <div *ngIf="!t.editing" class="tower-item">
           <div class="tower-info">

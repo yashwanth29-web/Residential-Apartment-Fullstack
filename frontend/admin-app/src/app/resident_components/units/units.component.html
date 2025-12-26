@@ -14,7 +14,9 @@
     <input type="number" placeholder="Max rent..." [(ngModel)]="maxRent" (input)="filterUnits()">
   </div>
 
-  <div class="units-grid" *ngIf="filteredUnits.length > 0">
+  <app-loading-spinner [isLoading]="isLoading" message="Loading flats..."></app-loading-spinner>
+
+  <div class="units-grid" *ngIf="!isLoading && filteredUnits.length > 0">
     <div *ngFor="let u of filteredUnits" class="unit-card">
       <!-- Image -->
       <div class="image-wrap">
@@ -47,11 +49,11 @@
     </div>
   </div>
 
-  <div *ngIf="filteredUnits.length === 0 && units.length > 0" class="empty-state">
+  <div *ngIf="!isLoading && filteredUnits.length === 0 && units.length > 0" class="empty-state">
     No flats match your search criteria
   </div>
-  <div *ngIf="units.length === 0" class="empty-state">
-    Loading premium flats...
+  <div *ngIf="!isLoading && units.length === 0" class="empty-state">
+    No flats available at the moment
   </div>
 
   <!-- Booking & Payment Popup -->

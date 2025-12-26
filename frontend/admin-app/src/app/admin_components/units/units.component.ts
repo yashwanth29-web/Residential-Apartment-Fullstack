@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../navbar/navbar';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   standalone: true,
   selector: 'app-units',
-  imports: [CommonModule, FormsModule, Navbar],
+  imports: [CommonModule, FormsModule, Navbar, LoadingSpinnerComponent],
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.css']
 })
@@ -16,6 +17,7 @@ export class UnitsComponent implements OnInit {
   units: any[] = [];
   filteredUnits: any[] = [];
   towers: any[] = [];
+  isLoading = true;
   
   flat_number = '';
   rent = 0;
@@ -29,7 +31,11 @@ export class UnitsComponent implements OnInit {
   editMode = false;
   editingUnitId: number | null = null;
 
-  constructor(public api: ApiService, private toastr: ToastrService) {}
+  constructor(
+    public api: ApiService, 
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadUnits();
@@ -56,13 +62,20 @@ export class UnitsComponent implements OnInit {
   }
 
   loadUnits() {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    
     this.api.getAdminUnits().subscribe({
       next: (res: any) => {
         this.units = res;
         this.filterUnits();
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.toastr.error('Failed to load units', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

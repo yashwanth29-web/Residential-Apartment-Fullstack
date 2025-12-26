@@ -15,19 +15,23 @@
     </svg>
   </div>
 
-  <!-- Tower-wise sections -->
-  <div *ngFor="let towerId of towerKeys" class="tower-section">
-    <h2 class="tower-title">Tower {{ towerId }}</h2>
+  <app-loading-spinner [isLoading]="isLoading" message="Loading amenities..."></app-loading-spinner>
 
-    <div class="amenities-grid">
-      <div class="amenity-card" *ngFor="let a of groupedAmenities[towerId]">
-        <div class="card-image-wrapper">
-          <img [src]="api.getImageUrl(a.image)" alt="{{ a.name }}" class="card-image" />
-          <div class="card-overlay"></div>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">{{ a.name }}</h3>
-          <p class="card-description">{{ a.description }}</p>
+  <!-- Tower-wise sections -->
+  <div *ngIf="!isLoading">
+    <div *ngFor="let towerId of towerKeys" class="tower-section">
+      <h2 class="tower-title">Tower {{ towerId }}</h2>
+
+      <div class="amenities-grid">
+        <div class="amenity-card" *ngFor="let a of groupedAmenities[towerId]">
+          <div class="card-image-wrapper">
+            <img [src]="api.getImageUrl(a.image)" alt="{{ a.name }}" class="card-image" />
+            <div class="card-overlay"></div>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">{{ a.name }}</h3>
+            <p class="card-description">{{ a.description }}</p>
+          </div>
         </div>
       </div>
     </div>

@@ -2,8 +2,10 @@
 <app-navbar></app-navbar>
 <div class="page-wrapper">
   <h1 class="title">Booking Requests</h1>
-  <!-- <pre class="debug-json">{{ bookings | json }}</pre> -->
-  <div class="cards-wrapper">
+  
+  <app-loading-spinner [isLoading]="isLoading" message="Loading bookings..."></app-loading-spinner>
+  
+  <div class="cards-wrapper" *ngIf="!isLoading">
     <div class="card" *ngFor="let b of results; let i = index" [style.--delay]="i * 0.15 + 's'">
       <div class="card-frame">
         <div class="card-header">

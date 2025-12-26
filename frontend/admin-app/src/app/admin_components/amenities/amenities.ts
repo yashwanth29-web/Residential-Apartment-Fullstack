@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { Navbar } from '../navbar/navbar';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   standalone: true,
   selector: 'app-amenities',
-  imports: [CommonModule, FormsModule, Navbar],
+  imports: [CommonModule, FormsModule, Navbar, LoadingSpinnerComponent],
   templateUrl: './amenities.html',
   styleUrl: './amenities.css',
 })
 export class Amenities implements OnInit {
   amenities: any[] = [];
   towers: any[] = [];
+  isLoading = true;
   form = {
     name: '',
     description: '',
@@ -23,7 +25,11 @@ export class Amenities implements OnInit {
   };
   editAmenity: any = null;
 
-  constructor(public api: ApiService, private toastr: ToastrService) {}
+  constructor(
+    public api: ApiService, 
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadAmenities();
@@ -40,12 +46,19 @@ export class Amenities implements OnInit {
   }
 
   loadAmenities(): void {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    
     this.api.getAdminAmenities().subscribe({
       next: (res: any) => {
         this.amenities = res;
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.toastr.error('Failed to load amenities', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

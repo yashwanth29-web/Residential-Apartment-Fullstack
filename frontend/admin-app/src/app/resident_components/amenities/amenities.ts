@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { NavbarComponent } from '../navbar/navbar';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+
 @Component({
   standalone: true,
   selector: 'app-amenities',
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, LoadingSpinnerComponent],
   templateUrl: './amenities.html',
   styleUrl: './amenities.css',
 })
@@ -23,13 +25,34 @@ export class Amenities implements OnInit {
 
   // Search input
   searchText: string = '';
+  
+  // Loading state
+  isLoading = true;
 
-  constructor(public api: ApiService) {}
+  constructor(
+    public api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.api.getResidentAmenities().subscribe((res: any[]) => {
-      this.amenities = res;
-      this.applyGrouping(res);
+    this.loadAmenities();
+  }
+
+  loadAmenities(): void {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    
+    this.api.getResidentAmenities().subscribe({
+      next: (res: any[]) => {
+        this.amenities = res;
+        this.applyGrouping(res);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 

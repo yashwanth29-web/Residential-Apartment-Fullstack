@@ -1,34 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../navbar/navbar';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   standalone: true,
   selector: 'app-towers',
-  imports: [CommonModule, FormsModule, Navbar],
+  imports: [CommonModule, FormsModule, Navbar, LoadingSpinnerComponent],
   templateUrl: './towers.component.html',
   styleUrls: ['./towers.component.css']
 })
 export class TowersComponent implements OnInit {
   name = '';
   towers: any[] = [];
+  isLoading = true;
 
-  constructor(private api: ApiService, private toastr: ToastrService) {}
+  constructor(
+    private api: ApiService, 
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadTowers();
   }
 
   loadTowers() {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    
     this.api.getTowers().subscribe({
       next: (res: any) => {
         this.towers = res || [];
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.towers = [];
+        this.isLoading = false;
+        this.cdr.detectChanges();
         this.toastr.error('Failed to load towers', 'Error');
       }
     });

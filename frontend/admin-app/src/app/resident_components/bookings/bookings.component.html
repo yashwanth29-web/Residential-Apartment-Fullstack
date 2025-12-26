@@ -3,7 +3,9 @@
 <div class="main-container">
   <h2>My Bookings</h2>
 
-  <div class="bookings-grid" *ngIf="bookings.length > 0">
+  <app-loading-spinner [isLoading]="isLoading" message="Loading your bookings..."></app-loading-spinner>
+
+  <div class="bookings-grid" *ngIf="!isLoading && bookings.length > 0">
     <div *ngFor="let b of bookings" class="booking-card">
       <div class="card-header">
         <h3>Flat {{ b.flat_number || 'N/A' }}</h3>
@@ -25,7 +27,7 @@
     </div>
   </div>
 
-  <div class="no-bookings" *ngIf="bookings.length === 0">
+  <div class="no-bookings" *ngIf="!isLoading && bookings.length === 0">
     <p>No bookings found. Start by booking a flat!</p>
   </div>
 </div>

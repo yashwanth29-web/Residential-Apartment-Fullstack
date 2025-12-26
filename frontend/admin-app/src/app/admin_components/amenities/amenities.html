@@ -40,7 +40,10 @@
   <!-- Amenities List -->
   <section class="list-section">
     <h2>All Amenities</h2>
-    <div class="cards-grid">
+    
+    <app-loading-spinner [isLoading]="isLoading" message="Loading amenities..."></app-loading-spinner>
+    
+    <div class="cards-grid" *ngIf="!isLoading">
       <div class="card" *ngFor="let a of amenities">
         <div class="card-header">
           <h3>{{ a.name }}</h3>

@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Navbar } from '../navbar/navbar';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   standalone: true,
   selector: 'app-leases',
-  imports: [CommonModule, FormsModule, Navbar],
+  imports: [CommonModule, FormsModule, Navbar, LoadingSpinnerComponent],
   templateUrl: './leases.html',
   styleUrl: './leases.css',
 })
 export class Leases implements OnInit {
   leases: any[] = [];
+  isLoading = true;
 
   form = {
     Booking_id: 0,
@@ -21,19 +23,30 @@ export class Leases implements OnInit {
     user_name: ''
   };
 
-  constructor(private api: ApiService, private toastr: ToastrService) {}
+  constructor(
+    private api: ApiService, 
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadLeases();
   }
 
   loadLeases() {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+    
     this.api.getLeases().subscribe({
       next: (res: any) => {
         this.leases = res;
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.toastr.error('Failed to load leases', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

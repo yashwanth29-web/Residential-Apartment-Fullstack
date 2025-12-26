@@ -65,7 +65,7 @@
   text-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
 }
 
-/* Nav Links (unchanged for consistency) */
+/* Nav Links */
 .nav-links {
   display: flex;
   list-style: none;
@@ -76,15 +76,20 @@
 
 .nav-links li {
   position: relative;
+}
+
+.nav-links li a {
   font-weight: 600;
   font-size: 1.15rem;
   color: rgba(255, 255, 255, 0.92);
   cursor: pointer;
   padding: 0.7rem 0;
   transition: color 0.4s ease;
+  text-decoration: none;
+  display: block;
 }
 
-.nav-links li::after {
+.nav-links li a::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -97,17 +102,17 @@
   transform: translateX(-50%);
 }
 
-.nav-links li:hover,
-.nav-links li.active {
+.nav-links li a:hover,
+.nav-links li a.active {
   color: #ffd700;
 }
 
-.nav-links li:hover::after,
-.nav-links li.active::after {
+.nav-links li a:hover::after,
+.nav-links li a.active::after {
   width: 100%;
 }
 
-.nav-links li:hover {
+.nav-links li a:hover {
   text-shadow: 0 0 18px rgba(255, 215, 0, 0.45);
 }
 

@@ -35,7 +35,9 @@
   <!-- ACTIVE LEASES (NORMAL BACKGROUND) -->
   <h2 class="section-title">Active Leases</h2>
 
-  <div class="leases-grid">
+  <app-loading-spinner [isLoading]="isLoading" message="Loading leases..."></app-loading-spinner>
+
+  <div class="leases-grid" *ngIf="!isLoading">
     <div class="lease-card premium" *ngFor="let l of leases">
       <span class="status-badge">ACTIVE</span>
 
